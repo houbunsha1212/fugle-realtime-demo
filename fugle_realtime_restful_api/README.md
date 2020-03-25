@@ -71,7 +71,7 @@ line.target_price_strategy(symbol_id = '2884', rise_target_price = 30, drop_targ
 line.target_change_strategy(symbol_id = '2884', rise_target_change = 0.01, drop_target_change = 0.01)
 ```
 `rise_target_change` and `drop_target_change` represent the upper and lower bound of the change strategy.
-### `Dashboard Demo`
+### Dashboard Demo
 **We use Dash to build our real-time stock quote application.** <br>
 [Dash](https://dash.plot.ly/introduction) is a productive Python framework for building web applications. <br>
 It is really suited for everyone to bulid a dashboard with highly custom user interface in Python. <br><br>
