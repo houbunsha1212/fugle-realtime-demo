@@ -5,3 +5,4 @@ requests==2.22.0
 dash==1.9.1
 dash-daq==0.1.7
 dash-table==4.6.1
+line_notify==0.1.4
