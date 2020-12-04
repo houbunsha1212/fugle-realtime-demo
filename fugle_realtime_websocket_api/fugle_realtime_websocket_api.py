@@ -62,8 +62,9 @@ class chart_websocket_api():
     def chart_websocket(self, symbol_id):
 
         def on_message(ws, message):
-
-            self.chart_msg = json.loads(message)
+            message = json.loads(message)
+            if "-oddlot" not in message['data']['info']['mode']:
+                self.chart_msg = message
         
         def on_error(ws, error):
             print(error)
