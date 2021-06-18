@@ -17,6 +17,15 @@ import time
 import requests
 import json
 
+API_VERSION = "v0.2"
+
+
+def convert_datetime_format(dts):
+    return (
+        datetime.datetime.strptime(dts, "%Y-%m-%dT%H:%M:%S.%f+08:00")
+        - datetime.timedelta(hours=8)
+    ).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+
 
 class create_Thread(threading.Thread):
     def __init__(self, *args, **keywords):
@@ -73,7 +82,7 @@ class chart_websocket_api:
 
         websocket.enableTrace(False)
         ws = websocket.WebSocketApp(
-            "wss://api.fugle.tw/realtime/v0/intraday/chart?symbolId="
+            f"wss://api.fugle.tw/realtime/{API_VERSION}/intraday/chart?symbolId="
             + symbol_id
             + "&apiToken="
             + self.api_token,
@@ -147,6 +156,18 @@ class chart_websocket_api:
         df_time = pd.DataFrame(time_index, columns=["at"])
 
         ohlc = self.chart_msg["data"]["chart"]
+
+        if API_VERSION == "v0.2":
+            for key in ohlc.copy():
+                try:
+                    datetime.datetime.strptime(
+                        key, "%Y-%m-%dT%H:%M:%S.%f+08:00"
+                    )
+                    ohlc[convert_datetime_format(key)] = ohlc[key]
+                    del ohlc[key]
+                except:
+                    continue
+
         df = pd.DataFrame(ohlc.values())
 
         df["at"] = pd.DataFrame(ohlc.keys())
@@ -269,7 +290,7 @@ class quote_websocket_api:
 
         websocket.enableTrace(False)
         ws = websocket.WebSocketApp(
-            "wss://api.fugle.tw/realtime/v0/intraday/quote?symbolId="
+            f"wss://api.fugle.tw/realtime/{API_VERSION}/intraday/quote?symbolId="
             + symbol_id
             + "&apiToken="
             + self.api_token,
